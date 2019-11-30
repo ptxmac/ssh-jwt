@@ -15,6 +15,8 @@ import (
 )
 
 func main() {
+	sshjwt.RegisterSigner()
+
 	if err := root(); err != nil {
 		log.Fatalf("%+v\n", err)
 	}
