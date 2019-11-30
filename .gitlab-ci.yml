@@ -1,0 +1,15 @@
+image: golang:1.13
+
+before_script:
+  - export GOPATH="$(pwd)/.gopath"
+
+cache:
+  paths:
+    - .gopath
+
+coverage:
+  stage: test
+  script:
+    - go test ./... -v -coverprofile .testCoverage.txt
+    - go tool cover -func=.testCoverage.txt
+
