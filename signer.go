@@ -73,7 +73,7 @@ func (s *sshSigner) Alg() string {
 
 var SSHSigningMethod *sshSigner
 
-func init() {
+func RegisterSigner() {
 	SSHSigningMethod = &sshSigner{}
 	jwt.RegisterSigningMethod(SSHSigningMethod.Alg(), func() jwt.SigningMethod {
 		return SSHSigningMethod
