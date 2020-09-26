@@ -7,7 +7,7 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/spf13/cobra"
 
-	sshjwt "gitlab.com/ptxmac/ssh-jwt"
+	"go.ptx.dk/ssh-jwt"
 )
 
 func split(arg string) (string, string, error) {

@@ -11,7 +11,7 @@ import (
 	"golang.org/x/crypto/ssh"
 	"golang.org/x/crypto/ssh/agent"
 
-	sshjwt "gitlab.com/ptxmac/ssh-jwt"
+	"go.ptx.dk/ssh-jwt"
 )
 
 func main() {
