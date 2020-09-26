@@ -6,6 +6,8 @@ A library and command to generate jwt tokens using ssh key or ssh-agent
 
 ### Library Usage
 
+import as `sshjwt "go.ptx.dk/sh-jwt"`
+
 #### Sign token
 
 The following example connects to the ssh-agent and signs a token with the first available key.

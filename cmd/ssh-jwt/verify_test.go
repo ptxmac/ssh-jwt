@@ -10,7 +10,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"golang.org/x/crypto/ssh/agent"
 
-	sshjwt "gitlab.com/ptxmac/ssh-jwt"
+	"go.ptx.dk/ssh-jwt"
 )
 
 func TestVerify(t *testing.T) {

@@ -10,7 +10,7 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/spf13/cobra"
 
-	"gitlab.com/ptxmac/ssh-jwt"
+	"go.ptx.dk/ssh-jwt"
 )
 
 func readToken(arg string) (string, error) {
