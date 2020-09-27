@@ -1,3 +1,5 @@
+[![GoDoc reference](https://img.shields.io/badge/godoc-reference-blue.svg)](https://pkg.go.dev/go.ptx.dk/ssh-jwt)
+
 # ssh-jwt
 
 A library and command to generate jwt tokens using ssh key or ssh-agent
