@@ -6,7 +6,7 @@ import (
 	"net"
 	"testing"
 
-	"github.com/dgrijalva/jwt-go"
+	"github.com/golang-jwt/jwt"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	sshagent "golang.org/x/crypto/ssh/agent"
