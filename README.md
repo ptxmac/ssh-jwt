@@ -1,4 +1,6 @@
-[![GoDoc reference](https://img.shields.io/badge/godoc-reference-blue.svg)](https://pkg.go.dev/go.ptx.dk/ssh-jwt)
+[![Go Reference](https://pkg.go.dev/badge/go.ptx.dk/ssh-jwt.svg)](https://pkg.go.dev/go.ptx.dk/ssh-jwt)
+[![Github Workflow](https://github.com/ptxmac/ssh-jwt/actions/workflows/go.yml/badge.svg)](https://github.com/ptxmac/ssh-jwt/actions/workflows/go.yml)
+[![codecov](https://codecov.io/gh/ptxmac/ssh-jwt/branch/master/graph/badge.svg)](https://codecov.io/gh/ptxmac/ssh-jwt)
 
 # ssh-jwt
 
