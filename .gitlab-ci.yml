@@ -1,3 +1,12 @@
-include:
-  - project: 'ptxmac/build'
-    file: 'build-go.yaml'
+variables:
+  BIN_PATH: .
+
+build-test:
+  stage: test
+  script:
+    - go build $BIN_PATH
+    - go test ./... -v -coverprofile .testCoverage.txt
+    - go tool cover -func=.testCoverage.txt
+  artifacts:
+    paths:
+      - $CI_PROJECT_NAME
