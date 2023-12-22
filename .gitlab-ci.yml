@@ -1,3 +1,19 @@
-include:
-  - project: 'ptxmac/build'
-    file: 'build-go.yaml'
+variables:
+  BIN_PATH: .
+
+before_script:
+  - export GOPATH="$(pwd)/.gopath"
+  - export GOPRIVATE="gitlab.com/ptxmac/*"
+  - git config --global url."https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.com/".insteadOf "https://gitlab.com/"
+
+build-test:
+  stage: test
+  parallel:
+    matrix:
+      - GOVERSION: ['1.16','1.17', '1.18', '1.19', '1.20', '1.21']
+    
+  image: golang:$GOVERSION
+  script:
+    - go build $BIN_PATH
+    - go test ./... -v -coverprofile .testCoverage.txt
+    - go tool cover -func=.testCoverage.txt
