@@ -1,5 +1,6 @@
 variables:
   BIN_PATH: .
+#  GOVERSIONS: ['1.16']
 
 before_script:
   - export GOPATH="$(pwd)/.gopath"
@@ -8,7 +9,11 @@ before_script:
 
 build-test:
   stage: test
-  image: golang:1.16
+  parallel:
+    matrix:
+      - GOVERSION: ['1.16','1.17']
+    
+  image: golang:$GOVERSION
   script:
     - go build $BIN_PATH
     - go test ./... -v -coverprofile .testCoverage.txt
