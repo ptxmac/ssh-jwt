@@ -1,6 +1,5 @@
 variables:
   BIN_PATH: .
-#  GOVERSIONS: ['1.16']
 
 before_script:
   - export GOPATH="$(pwd)/.gopath"
@@ -11,13 +10,10 @@ build-test:
   stage: test
   parallel:
     matrix:
-      - GOVERSION: ['1.16','1.17']
+      - GOVERSION: ['1.16','1.17', '1.18', '1.19', '1.20', '1.21']
     
   image: golang:$GOVERSION
   script:
     - go build $BIN_PATH
     - go test ./... -v -coverprofile .testCoverage.txt
     - go tool cover -func=.testCoverage.txt
-  artifacts:
-    paths:
-      - $CI_PROJECT_NAME
