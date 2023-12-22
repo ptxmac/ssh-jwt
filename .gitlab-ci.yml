@@ -1,8 +1,14 @@
 variables:
   BIN_PATH: .
 
+before_script:
+  - export GOPATH="$(pwd)/.gopath"
+  - export GOPRIVATE="gitlab.com/ptxmac/*"
+  - git config --global url."https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.com/".insteadOf "https://gitlab.com/"
+
 build-test:
   stage: test
+  image: golang:1.16
   script:
     - go build $BIN_PATH
     - go test ./... -v -coverprofile .testCoverage.txt
