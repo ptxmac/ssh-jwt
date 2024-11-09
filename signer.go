@@ -3,7 +3,7 @@ package sshjwt
 import (
 	"fmt"
 
-	"github.com/golang-jwt/jwt"
+	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/ssh"
 	sshagent "golang.org/x/crypto/ssh/agent"
 )
@@ -19,18 +19,29 @@ func (w *keyWrapper) getClient() sshagent.ExtendedAgent {
 
 type sshSigner struct{}
 
-func (s *sshSigner) Verify(signingString, signature string, key interface{}) error {
+func (s *sshSigner) Verify(signingString string, signature []byte, key interface{}) error {
 	switch key := key.(type) {
-	case *keyWrapper:
+	case ssh.PublicKey:
 		return verifyKey(signingString, signature, key)
+	case []ssh.PublicKey:
+		var keys []ssh.PublicKey
+		for _, k := range key {
+			keys = append(keys, k)
+		}
+		return verifyAnyKey(signingString, signature, keys)
+	case *keyWrapper:
+		return verifyKey(signingString, signature, key.pubKey)
 	case []*keyWrapper:
-		return verifyAnyKey(signingString, signature, key)
+		var keys []ssh.PublicKey
+		for _, k := range key {
+			keys = append(keys, k.pubKey)
+		}
+		return verifyAnyKey(signingString, signature, keys)
 	}
 	return fmt.Errorf("unexpected key type: %T", key)
-
 }
 
-func verifyAnyKey(signingString string, signature string, keys []*keyWrapper) error {
+func verifyAnyKey(signingString string, signature []byte, keys []ssh.PublicKey) error {
 	for _, key := range keys {
 		if err := verifyKey(signingString, signature, key); err == nil {
 			return nil
@@ -39,22 +50,18 @@ func verifyAnyKey(signingString string, signature string, keys []*keyWrapper) er
 	return fmt.Errorf("found no valid key")
 }
 
-func verifyKey(signingString string, signature string, key *keyWrapper) error {
-	sigBlob, err := jwt.DecodeSegment(signature)
-	if err != nil {
-		return err
-	}
+func verifyKey(signingString string, signature []byte, key ssh.PublicKey) error {
 	sig := &ssh.Signature{
 		Format: "rsa-sha2-256",
-		Blob:   sigBlob,
+		Blob:   signature,
 	}
-	return key.pubKey.Verify([]byte(signingString), sig)
+	return key.Verify([]byte(signingString), sig)
 }
 
-func (s *sshSigner) Sign(signingString string, key interface{}) (string, error) {
+func (s *sshSigner) Sign(signingString string, key interface{}) ([]byte, error) {
 	w, ok := key.(*keyWrapper)
 	if !ok {
-		return "", fmt.Errorf("unexpected key type: %t", key)
+		return nil, fmt.Errorf("unexpected key type: %t", key)
 	}
 	sig, err := w.getClient().SignWithFlags(
 		w.pubKey,
@@ -62,9 +69,9 @@ func (s *sshSigner) Sign(signingString string, key interface{}) (string, error) 
 		sshagent.SignatureFlagRsaSha256,
 	)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
-	return jwt.EncodeSegment(sig.Blob), nil
+	return sig.Blob, nil
 }
 
 func (s *sshSigner) Alg() string {

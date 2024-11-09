@@ -49,5 +49,12 @@ func (a *agent) wrapKey(key *sshagent.Key) *keyWrapper {
 
 func DefaultAgent() (Agent, error) {
 	conn, err := net.Dial("unix", os.Getenv("SSH_AUTH_SOCK"))
-	return &agent{client: sshagent.NewClient(conn)}, err
+	if err != nil {
+		return nil, err
+	}
+	return NewAgent(sshagent.NewClient(conn)), nil
+}
+
+func NewAgent(client sshagent.ExtendedAgent) Agent {
+	return &agent{client: client}
 }
