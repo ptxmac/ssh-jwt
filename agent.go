@@ -5,12 +5,14 @@ import (
 	"net"
 	"os"
 
+	"golang.org/x/crypto/ssh"
 	sshagent "golang.org/x/crypto/ssh/agent"
 )
 
 type Agent interface {
 	FirstKey() (*keyWrapper, error)
 	AllKeys() ([]*keyWrapper, error)
+	WrapPubKey(pub ssh.PublicKey) *keyWrapper
 }
 
 type agent struct {
@@ -38,6 +40,13 @@ func (a *agent) FirstKey() (*keyWrapper, error) {
 		return nil, fmt.Errorf("no keys found")
 	}
 	return a.wrapKey(keys[0]), nil
+}
+
+func (a *agent) WrapPubKey(pub ssh.PublicKey) *keyWrapper {
+	return &keyWrapper{
+		agent:  a,
+		pubKey: pub,
+	}
 }
 
 func (a *agent) wrapKey(key *sshagent.Key) *keyWrapper {
