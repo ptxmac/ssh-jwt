@@ -25,7 +25,6 @@ func readToken(arg string) (string, error) {
 
 func verifyCmd(cmd *cobra.Command, args []string) error {
 	agent, err := getAgent()
-
 	if err != nil {
 		return err
 	}
