@@ -9,8 +9,19 @@ import (
 )
 
 type keyWrapper struct {
-	pubKey ssh.PublicKey
-	agent  *agent
+	pubKey  ssh.PublicKey
+	agent   *agent
+	comment string // SSH key comment from the agent
+}
+
+// Comment returns the SSH key comment associated with this key
+func (w *keyWrapper) Comment() string {
+	return w.comment
+}
+
+// PublicKey returns the SSH public key
+func (w *keyWrapper) PublicKey() ssh.PublicKey {
+	return w.pubKey
 }
 
 func (w *keyWrapper) getClient() sshagent.ExtendedAgent {

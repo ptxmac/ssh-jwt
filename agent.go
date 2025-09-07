@@ -44,15 +44,25 @@ func (a *agent) FirstKey() (*keyWrapper, error) {
 
 func (a *agent) WrapPubKey(pub ssh.PublicKey) *keyWrapper {
 	return &keyWrapper{
-		agent:  a,
-		pubKey: pub,
+		agent:   a,
+		pubKey:  pub,
+		comment: "", // No comment available when wrapping just a public key
 	}
 }
 
 func (a *agent) wrapKey(key *sshagent.Key) *keyWrapper {
+	// Parse the agent key to get the proper ssh.PublicKey
+	pubKey, err := ssh.ParsePublicKey(key.Blob)
+	if err != nil {
+		// If we can't parse the key, fall back to the original behavior
+		// This shouldn't happen in normal cases, but provides resilience
+		pubKey = key
+	}
+	
 	return &keyWrapper{
-		agent:  a,
-		pubKey: key,
+		agent:   a,
+		pubKey:  pubKey,
+		comment: key.Comment,
 	}
 }
 
